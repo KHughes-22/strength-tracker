@@ -3,17 +3,18 @@ import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 
+
 export default function WorkoutScreen() {
   const { session } = useAuth();
+  const {start} = useLocalSearchParams();
+
+  async function handleStartWorkout(){
+
+  }
 
   async function handleSaveWorkout() {
-  
     if (!session) return;
 
-    const newWorkout = {
-      user_id: session.user.id,
-      duration: 60,
-    };
     const { data, error } = await supabase
     .from('workouts')
     .insert(newWorkout);
@@ -27,6 +28,8 @@ export default function WorkoutScreen() {
 
   console.log(newWorkout);
   }
+
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Workout Page</Text>

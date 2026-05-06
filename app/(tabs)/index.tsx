@@ -33,25 +33,9 @@ export default function HomeScreen() {
   async function handleStartWorkout() {
     if (!session) return;
 
-    const newWorkout = {
-      user_id: session.user.id,
-      duration: 0,
-    };
-
-    const { data: workoutData, error } = await supabase
-      .from('workouts')
-      .insert(newWorkout)
-      .select()
-      .single();
-
-    if (error) {
-      console.log(error.message);
-      return;
-    }
-
     router.push({
       pathname: '/workout',
-      params: { workoutId: workoutData.id },
+      params: {start: 'true'},
     });
   }
 
