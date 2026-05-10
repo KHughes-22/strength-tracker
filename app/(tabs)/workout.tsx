@@ -1,14 +1,15 @@
 import { useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
+import { useWorkout } from '../../contexts/WorkoutContext';
 import { supabase } from '../../lib/supabase';
 
 
 export default function WorkoutScreen() {
   const { session } = useAuth();
   const {start} = useLocalSearchParams();
-  const [activeWorkoutId, setActiveWorkoutId] = useState<string | null>(null);
+  const {activeWorkoutId, setActiveWorkoutId} = useWorkout();
 
   async function handleStartWorkout(){
     if(!session) return;
@@ -29,6 +30,11 @@ export default function WorkoutScreen() {
       return;
     }
 
+    //if there is no workout then return
+    if (!workout) return;
+    //update our WorkoutContext to have an active workout
+    setActiveWorkoutId(workout.id)
+
     console.log(workout);
   }
 
@@ -36,38 +42,58 @@ export default function WorkoutScreen() {
     if (!session) return;
   }
 
+  //handles the render if we start our workout from the homepage
   useEffect(() => {
     console.log('START PARAM:', start);
 
     if (start === 'true' && !activeWorkoutId) {
-      console.log('AUTO START TRIGGERED');
+      console.log('Workout started from Homepage');
       handleStartWorkout();
     }
     }, [start]);
     
     return (
 
-    <View style={styles.container}>
-      <Text style={styles.title}>Workout Page</Text>
-      <Text style={styles.subtitle}>This is a test screen for the workout page.</Text>
-
-      <Pressable style = {styles.button}
+    <View>
+      {!activeWorkoutId ? (
+        <Pressable style = {styles.button}
         onPress= {handleStartWorkout}>
       <Text style={styles.buttonText}>Start Workout </Text>
       </Pressable>
+      ) : (
 
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Test Section</Text>
         <Text style={styles.cardText}>Workout content will go here.</Text>
       </View>
+      )}
+      </View>
+    );
+  }
 
-      <Pressable style={styles.button}
-        onPress={handleSaveWorkout}>
-        <Text style={styles.buttonText}>Save workout</Text>
-      </Pressable>
-    </View>
-  );
-}
+    // </View>
+    // <View style={styles.container}>
+    //   <Text style={styles.title}>Workout Page</Text>
+    //   <Text style={styles.subtitle}>This is a test screen for the workout page.</Text>
+
+{/*       
+      {/* <Pressable style = {styles.button}
+        onPress= {handleStartWorkout}>
+      <Text style={styles.buttonText}>Start Workout </Text>
+      </Pressable> */}
+{/* 
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Test Section</Text>
+        <Text style={styles.cardText}>Workout content will go here.</Text>
+      </View> */}
+
+  //     <Pressable style={styles.button}
+  //       onPress={handleSaveWorkout}>
+  //       <Text style={styles.buttonText}>Save workout</Text>
+  //     </Pressable>
+  //   </View>
+  // ); 
+
 
 const styles = StyleSheet.create({
   container: {
