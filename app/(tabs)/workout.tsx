@@ -1,4 +1,5 @@
-import React from 'react';
+import { useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
@@ -7,33 +8,53 @@ import { supabase } from '../../lib/supabase';
 export default function WorkoutScreen() {
   const { session } = useAuth();
   const {start} = useLocalSearchParams();
+  const [activeWorkoutId, setActiveWorkoutId] = useState<string | null>(null);
 
   async function handleStartWorkout(){
+    if(!session) return;
 
+    
+    const { data: workout, error: workoutError } = await supabase
+      .from('workouts')
+      .insert({
+      user_id: session.user.id,
+      duration: 0,
+      })
+    .select()
+    .single();
+
+    if (workoutError) {
+      console.log('Error starting workout:', workoutError.message);
+      Alert.alert('Error starting workout');
+      return;
+    }
+
+    console.log(workout);
   }
 
   async function handleSaveWorkout() {
     if (!session) return;
-
-    const { data, error } = await supabase
-    .from('workouts')
-    .insert(newWorkout);
-
-  if (error) {
-    console.log('Error:', error.message);
-  } else {
-    console.log('Success:', data);
-    Alert.alert('successfully saved workout');
   }
 
-  console.log(newWorkout);
-  }
+  useEffect(() => {
+    console.log('START PARAM:', start);
 
+    if (start === 'true' && !activeWorkoutId) {
+      console.log('AUTO START TRIGGERED');
+      handleStartWorkout();
+    }
+    }, [start]);
+    
+    return (
 
-  return (
     <View style={styles.container}>
       <Text style={styles.title}>Workout Page</Text>
       <Text style={styles.subtitle}>This is a test screen for the workout page.</Text>
+
+      <Pressable style = {styles.button}
+        onPress= {handleStartWorkout}>
+      <Text style={styles.buttonText}>Start Workout </Text>
+      </Pressable>
 
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Test Section</Text>

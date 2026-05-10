@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { ActivityIndicator, View } from 'react-native';
 import { AuthProvider, useAuth } from '../contexts/AuthContext';
+import { WorkoutProvider } from '../contexts/WorkoutContext';
 
 function RootNavigator() {
   const { session, loading } = useAuth();
@@ -30,7 +31,9 @@ function RootNavigator() {
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <RootNavigator />
+      <WorkoutProvider>
+        <RootNavigator />
+      </WorkoutProvider>
     </AuthProvider>
   );
 }
