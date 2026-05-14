@@ -42,3 +42,36 @@ export type WorkoutSession = {
   date: string;
   exercises: ExerciseWithSets[];
 };
+
+export const DEFAULT_EXERCISES: WorkoutExercise[] = [
+  {
+    id: '1',
+    name: 'Bench Press',
+    primaryMuscle: 'Chest',
+    secondaryMuscle: ['Triceps', 'Shoulders'],
+  },
+  {
+    id: '2',
+    name: 'Incline Dumbbell Press',
+    primaryMuscle: 'Chest',
+    secondaryMuscle: ['Shoulders', 'Triceps'],
+  },
+  {
+    id: '3',
+    name: 'Squat',
+    primaryMuscle: 'Quads',
+    secondaryMuscle: ['Glutes', 'Core'],
+  },
+  {
+    id: '4',
+    name: 'Deadlift',
+    primaryMuscle: 'Back',
+    secondaryMuscle: ['Hamstrings', 'Glutes'],
+  },
+  {
+    id: '5',
+    name: 'Lat Pulldown',
+    primaryMuscle: 'Back',
+    secondaryMuscle: ['Biceps'],
+  },
+];

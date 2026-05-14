@@ -4,7 +4,7 @@ import { AuthProvider, useAuth } from '../contexts/AuthContext';
 import { WorkoutProvider } from '../contexts/WorkoutContext';
 
 function RootNavigator() {
-  const { session, loading } = useAuth();
+  const {loading } = useAuth();
 
   if (loading) {
     return (
@@ -15,16 +15,11 @@ function RootNavigator() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      {session ? (
-        <Stack.Screen name="(tabs)" />
-      ) : (
-        <>
-          <Stack.Screen name="sign-in" />
-          <Stack.Screen name="sign-up" />
-        </>
-      )}
-    </Stack>
+  <Stack screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="(tabs)" />
+    <Stack.Screen name="sign-in" />
+    <Stack.Screen name="sign-up" />
+  </Stack>
   );
 }
 

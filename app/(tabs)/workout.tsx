@@ -14,6 +14,7 @@ export default function WorkoutScreen() {
   async function handleStartWorkout(){
     if(!session) return;
 
+    console.log('initiate start workout')
     
     const { data: workout, error: workoutError } = await supabase
       .from('workouts')
@@ -61,38 +62,24 @@ export default function WorkoutScreen() {
       <Text style={styles.buttonText}>Start Workout </Text>
       </Pressable>
       ) : (
+      <View>
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Test Section</Text>
+          <Text style={styles.cardText}>testing</Text>
+        </View>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Test Section</Text>
-        <Text style={styles.cardText}>Workout content will go here.</Text>
+        {/* <Pressable style={styles.exerciseButton} 
+        onPress={() => setShowExerciseMenu(!showExerciseMenu)}>
+          <Text style={styles.exerciseButtonText}>+</Text>
+        </Pressable> */}
       </View>
-      )}
-      </View>
-    );
+
+      )
+    }
+    </View>
+    )
   }
 
-    // </View>
-    // <View style={styles.container}>
-    //   <Text style={styles.title}>Workout Page</Text>
-    //   <Text style={styles.subtitle}>This is a test screen for the workout page.</Text>
-
-{/*       
-      {/* <Pressable style = {styles.button}
-        onPress= {handleStartWorkout}>
-      <Text style={styles.buttonText}>Start Workout </Text>
-      </Pressable> */}
-{/* 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Test Section</Text>
-        <Text style={styles.cardText}>Workout content will go here.</Text>
-      </View> */}
-
-  //     <Pressable style={styles.button}
-  //       onPress={handleSaveWorkout}>
-  //       <Text style={styles.buttonText}>Save workout</Text>
-  //     </Pressable>
-  //   </View>
-  // ); 
 
 
 const styles = StyleSheet.create({
@@ -135,5 +122,34 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  exerciseButton: {
+  width: 60,
+  height: 60,
+  borderRadius: 30,
+  backgroundColor: '#111',
+  justifyContent: 'center',
+  alignItems: 'center',
+  alignSelf: 'center',
+},
+
+  exerciseButtonText: {
+    color: '#fff',
+    fontSize: 32,
+    fontWeight: '600',
+  },
+
+  exerciseMenu: {
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+
+  exerciseMenuItem: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
   },
 });
