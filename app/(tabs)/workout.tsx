@@ -1,15 +1,17 @@
 import { useLocalSearchParams } from 'expo-router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { useWorkout } from '../../contexts/WorkoutContext';
 import { supabase } from '../../lib/supabase';
+import { DEFAULT_EXERCISES } from '../../types/workout';
 
 
 export default function WorkoutScreen() {
   const { session } = useAuth();
   const {start} = useLocalSearchParams();
   const {activeWorkoutId, setActiveWorkoutId} = useWorkout();
+  const [showExerciseMenu, setShowExerciseMenu] = useState(false);
 
   async function handleStartWorkout(){
     if(!session) return;
@@ -68,10 +70,29 @@ export default function WorkoutScreen() {
           <Text style={styles.cardText}>testing</Text>
         </View>
 
-        {/* <Pressable style={styles.exerciseButton} 
+        <Pressable style={styles.exerciseButton} 
         onPress={() => setShowExerciseMenu(!showExerciseMenu)}>
           <Text style={styles.exerciseButtonText}>+</Text>
-        </Pressable> */}
+        </Pressable>
+      
+      
+        {showExerciseMenu && (
+          <View style={styles.exerciseMenu}>
+            {DEFAULT_EXERCISES.map((exercise) => (
+              <Pressable
+                key={exercise.id}
+                style={styles.exerciseMenuItem}
+                onPress={() => {
+                  console.log(exercise);
+
+                  setShowExerciseMenu(false);
+                }}
+              >
+                <Text>{exercise.name}</Text>
+              </Pressable>
+            ))}
+          </View>
+      )}
       </View>
 
       )
