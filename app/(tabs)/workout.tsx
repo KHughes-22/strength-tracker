@@ -1,9 +1,9 @@
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { useWorkout } from '../../contexts/WorkoutContext';
-import { supabase } from '../../lib/supabase';
+import { startWorkout } from '../../services/workoutService';
 import { DEFAULT_EXERCISES } from '../../types/workout';
 
 
@@ -17,32 +17,15 @@ export default function WorkoutScreen() {
     if(!session) return;
 
     console.log('initiate start workout')
+
+    const {data: workout, error} = await startWorkout(session.user.id);
     
-    const { data: workout, error: workoutError } = await supabase
-      .from('workouts')
-      .insert({
-      user_id: session.user.id,
-      duration: 0,
-      })
-    .select()
-    .single();
-
-    if (workoutError) {
-      console.log('Error starting workout:', workoutError.message);
-      Alert.alert('Error starting workout');
-      return;
-    }
-
     //if there is no workout then return
     if (!workout) return;
     //update our WorkoutContext to have an active workout
     setActiveWorkoutId(workout.id)
 
     console.log(workout);
-  }
-
-  async function handleSaveWorkout() {
-    if (!session) return;
   }
 
   //handles the render if we start our workout from the homepage
@@ -79,12 +62,9 @@ export default function WorkoutScreen() {
         {showExerciseMenu && (
           <View style={styles.exerciseMenu}>
             {DEFAULT_EXERCISES.map((exercise) => (
-              <Pressable
-                key={exercise.id}
-                style={styles.exerciseMenuItem}
+              <Pressable key={exercise.id} style={styles.exerciseMenuItem}
                 onPress={() => {
                   console.log(exercise);
-
                   setShowExerciseMenu(false);
                 }}
               >
