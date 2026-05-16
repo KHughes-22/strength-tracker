@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { useWorkout } from '../../contexts/WorkoutContext';
-import { startWorkout } from '../../services/workoutService';
-import { DEFAULT_EXERCISES } from '../../types/workout';
+import { addExercise, fetchExercises, startWorkout } from '../../services/workoutService';
+import { WorkoutExercise } from '../../types/workout';
 
 
 export default function WorkoutScreen() {
@@ -12,6 +12,7 @@ export default function WorkoutScreen() {
   const {start} = useLocalSearchParams();
   const {activeWorkoutId, setActiveWorkoutId} = useWorkout();
   const [showExerciseMenu, setShowExerciseMenu] = useState(false);
+  const [exercises, setExercises] = useState<WorkoutExercise[]>([]);
 
   async function handleStartWorkout(){
     if(!session) return;
@@ -36,7 +37,25 @@ export default function WorkoutScreen() {
       console.log('Workout started from Homepage');
       handleStartWorkout();
     }
-    }, [start]);
+  }, [start]);
+
+  useEffect(() => {
+    async function loadExercises() {
+      const { data, error } =
+        await fetchExercises();
+
+      if (error) {
+        console.log(error);
+        return;
+      }
+
+      if (data) {
+        setExercises(data);
+      }
+    }
+
+    loadExercises();
+  }, []);
     
     return (
 
@@ -59,24 +78,33 @@ export default function WorkoutScreen() {
         </Pressable>
       
       
-        {showExerciseMenu && (
-          <View style={styles.exerciseMenu}>
-            {DEFAULT_EXERCISES.map((exercise) => (
-              <Pressable key={exercise.id} style={styles.exerciseMenuItem}
-                onPress={() => {
-                  console.log(exercise);
-                  setShowExerciseMenu(false);
-                }}
-              >
-                <Text>{exercise.name}</Text>
-              </Pressable>
-            ))}
-          </View>
-      )}
-      </View>
+    {showExerciseMenu && (
+      <View style={styles.exerciseMenu}>
+        {exercises.map((exercise) => (
+          <Pressable
+            key={exercise.id}
+            style={styles.exerciseMenuItem}
+            onPress={async () => {
+              if (!activeWorkoutId) return;
 
-      )
-    }
+              await addExercise(
+                exercise.id
+              );
+
+              setShowExerciseMenu(false);
+            }}
+          >
+            <Text>{exercise.name}</Text>
+
+          </Pressable>
+        ))}
+      </View>
+    )}
+
+
+
+      </View>
+      )}
     </View>
     )
   }
