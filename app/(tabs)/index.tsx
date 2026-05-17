@@ -45,55 +45,66 @@ export default function HomeScreen() {
     console.log(workouts);
   
     return (
-    <View style={styles.container}>
+
+
+    <View style={styles.headerContainer}>
       <Text style={styles.title}>Strength Tracker</Text>
 
-    <Pressable 
-      style={styles.primaryButton}
-      onPress={handleStartWorkout}
-    >
+    <Pressable style={styles.primaryButton} onPress={handleStartWorkout}>
       <Text style={styles.primaryButtonText}>Start Workout</Text>
     </Pressable>
 
-      {workouts.map((w) => (
+      
+      <View style={styles.container}>{workouts.map((w) => (
         <View key={w.id} style={styles.card}>
           <Text style={styles.cardTitle}>Last Workout</Text>
-          <Text>{w.duration} mins</Text>
+          <Text style= {styles.cardText}>{w.duration} mins</Text>
         </View>
       ))}
 
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Strength Progress</Text>
-        <Text>Trend preview coming</Text>
+        <Text style= {styles.cardText}>Trend preview coming</Text>
       </View>
 
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Body Weight</Text>
-        <Text>No data yet</Text>
+        <Text style= {styles.cardText}>No data yet</Text>
       </View>
 
-      <Pressable 
-      style={styles.primaryButton}
-      onPress={handleLogout}>
-      <Text style={styles.primaryButtonText}>Log Out</Text>
-      </Pressable>
+      <View style={styles.container}>
+        <Pressable 
+        style={styles.primaryButton}
+        onPress={handleLogout}>
+        <Text style={styles.primaryButtonText}>Log Out</Text>
+        </Pressable>
+      </View>
 
       </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  headerContainer:{
+    backgroundColor: '#1E1E24',
     flex: 1,
     padding: 20,
     gap: 16,
   },
+
+  container: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
   title: {
+    color: '#fff',
     fontSize: 28,
     fontWeight: '700',
   },
   primaryButton: {
-    backgroundColor: '#111',
+    backgroundColor: '#60A5FA',
     padding: 16,
     borderRadius: 10,
     alignItems: 'center',
@@ -104,13 +115,29 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   card: {
+    width: '47%',
+    aspectRatio: 1,
+
     padding: 16,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    borderRadius: 16,
+    backgroundColor: '#2A2A32',
+    marginBottom: 16,
+
+    justifyContent: 'space-between',
+    overflow: 'hidden',
   },
   cardTitle: {
+    color: '#fff',
     fontWeight: '600',
     marginBottom: 6,
   },
+  cardText: {
+    color: '#D1D5DB'
+  },
 });
+
+// Color pallet:
+// header: </FFFFF>
+// background: '#2A2A32'
+// cardText: '#D1D5DB'
+// Buttons: '#60A5FA'
