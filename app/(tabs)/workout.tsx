@@ -44,15 +44,15 @@ export default function WorkoutScreen() {
       const { data, error } =
         await fetchExercises();
 
-      if (error) {
-        console.log(error);
-        return;
-      }
+        if (error) {
+          console.log(error);
+          return;
+        }
 
-      if (data) {
-        setExercises(data);
+        if (data) {
+          setExercises(data);
+        }
       }
-    }
 
     loadExercises();
   }, []);
@@ -66,42 +66,39 @@ export default function WorkoutScreen() {
       <Text style={styles.buttonText}>Start Workout </Text>
       </Pressable>
       ) : (
-      <View>
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Test Section</Text>
-          <Text style={styles.cardText}>testing</Text>
-        </View>
-
-        <Pressable style={styles.exerciseButton} 
-        onPress={() => setShowExerciseMenu(!showExerciseMenu)}>
+      <View style={styles.setRow}>
+        <Pressable style={styles.exerciseButton}
+        onPress= {() =>
+          setShowExerciseMenu(!showExerciseMenu)
+        }
+        >
           <Text style={styles.exerciseButtonText}>+</Text>
         </Pressable>
       
-      
-    {showExerciseMenu && (
-      <View style={styles.exerciseMenu}>
-        {exercises.map((exercise) => (
-          <Pressable
-            key={exercise.id}
-            style={styles.exerciseMenuItem}
-            onPress={async () => {
-              if (!activeWorkoutId) return;
+        {showExerciseMenu && (
+          <View style={styles.exerciseMenu}>
+            {exercises.map((exercise) => (
+              <Pressable key={exercise.id} style={styles.exerciseMenuItem}
+                onPress={async () => {
+                  if (!activeWorkoutId) return;
 
-              await addExercise(
-                exercise.id
-              );
-
-              setShowExerciseMenu(false);
-            }}
-          >
-            <Text>{exercise.name}</Text>
-
-          </Pressable>
-        ))}
-      </View>
-    )}
+                  await addExercise(
+                    exercise.id
+                  );
+                  setShowExerciseMenu(false);
+                }}
+              >
 
 
+                <Text>{exercise.name}</Text>
+
+              </Pressable>
+            ))}
+          </View>
+        )}
+
+
+        
 
       </View>
       )}
@@ -181,4 +178,28 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
+
+  setRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  setInputContainer: {
+    flex: 1,
+    backgroundColor: '#2A2A32',
+    borderRadius: 14,
+    padding: 12,
+  },
+
+  input: {
+    color: '#FFFFF',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  inputLabel: {
+    color: '#D1D5DB',
+    fontSize: 12,
+    marginBottom: 6,
+  },
+
 });

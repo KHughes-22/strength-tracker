@@ -1,3 +1,4 @@
+import { useWorkout } from '@/contexts/WorkoutContext';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -7,6 +8,7 @@ import { supabase } from '../../lib/supabase';
 export default function HomeScreen() {
   const { session } = useAuth();
   const [workouts, setWorkouts] = useState<any[]>([]);
+  const {activeWorkoutId} = useWorkout();
 
   useEffect(() => {
     if (session) {
@@ -49,10 +51,15 @@ export default function HomeScreen() {
 
     <View style={styles.headerContainer}>
       <Text style={styles.title}>Strength Tracker</Text>
-
-    <Pressable style={styles.primaryButton} onPress={handleStartWorkout}>
-      <Text style={styles.primaryButtonText}>Start Workout</Text>
-    </Pressable>
+    
+      {!activeWorkoutId  ? (
+        <Pressable style={styles.primaryButton} onPress={handleStartWorkout}>
+          <Text style={styles.primaryButtonText}>Start Workout</Text>
+        </Pressable>
+      ) : (
+        <Text style={styles.cardTitle}>Active Workout In Session</Text>
+      )
+      }
 
       
       <View style={styles.container}>{workouts.map((w) => (
@@ -80,8 +87,8 @@ export default function HomeScreen() {
         </Pressable>
       </View>
 
+        </View>
       </View>
-    </View>
   );
 }
 
