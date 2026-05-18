@@ -4,15 +4,18 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { useWorkout } from '../../contexts/WorkoutContext';
 import { addExercise, fetchExercises, startWorkout } from '../../services/workoutService';
-import { WorkoutExercise } from '../../types/workout';
+import { Exercise, WorkoutExercise } from '../../types/workout';
 
 
 export default function WorkoutScreen() {
+  //session is user is logged in
   const { session } = useAuth();
+  //start param comes from homepage to start workout
   const {start} = useLocalSearchParams();
   const {activeWorkoutId, setActiveWorkoutId} = useWorkout();
   const [showExerciseMenu, setShowExerciseMenu] = useState(false);
-  const [exercises, setExercises] = useState<WorkoutExercise[]>([]);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [selectedExercise, setSelectedExercise] = useState<WorkoutExercise[]>([]);
 
   async function handleStartWorkout(){
     if(!session) return;
@@ -29,6 +32,8 @@ export default function WorkoutScreen() {
     console.log(workout);
   }
 
+
+
   //handles the render if we start our workout from the homepage
   useEffect(() => {
     console.log('START PARAM:', start);
@@ -38,6 +43,8 @@ export default function WorkoutScreen() {
       handleStartWorkout();
     }
   }, [start]);
+
+
 
   useEffect(() => {
     async function loadExercises() {
@@ -56,21 +63,25 @@ export default function WorkoutScreen() {
 
     loadExercises();
   }, []);
+
+
     
     return (
 
     <View>
       {!activeWorkoutId ? (
         <Pressable style = {styles.button}
-        onPress= {handleStartWorkout}>
-      <Text style={styles.buttonText}>Start Workout </Text>
-      </Pressable>
+          onPress= {handleStartWorkout}>
+          <Text style={styles.buttonText}>Start Workout </Text>
+        </Pressable>
+
       ) : (
-      <View style={styles.setRow}>
-        <Pressable style={styles.exerciseButton}
-        onPress= {() =>
-          setShowExerciseMenu(!showExerciseMenu)
-        }
+
+        <View style={styles.setRow}>
+          <Pressable style={styles.exerciseButton}
+          onPress= {() =>
+            setShowExerciseMenu(!showExerciseMenu)
+          }
         >
           <Text style={styles.exerciseButtonText}>+</Text>
         </Pressable>
@@ -88,16 +99,19 @@ export default function WorkoutScreen() {
                   setShowExerciseMenu(false);
                 }}
               >
-
-
-                <Text>{exercise.name}</Text>
-
+              <Text>{exercise.name}</Text>
               </Pressable>
             ))}
           </View>
         )}
 
+        {selectedExercise && (
+          <View>
+            <Text>selected exercise selected</Text>
+          </View>
 
+
+        )}
         
 
       </View>

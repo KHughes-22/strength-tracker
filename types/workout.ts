@@ -1,44 +1,34 @@
 // Workout intensity/type of set
 export type WorkoutType = 'warmup' | 'working' | 'dropset';
 
-// Single set
-export type WorkoutSet = {
-  type: WorkoutType;
-  reps: number;
-  weight: number;
-  time: number; // seconds (optional usage)
+export type Workout = {
+  id: string;
+  user_id: string;
+  duration: number | null;
+  created_at?: string;
+  ended_at?: string | null;
 };
 
-// Muscle groups
-export type MuscleGroup =
-  | 'Chest'
-  | 'Back'
-  | 'Shoulders'
-  | 'Biceps'
-  | 'Triceps'
-  | 'Quads'
-  | 'Hamstrings'
-  | 'Glutes'
-  | 'Calves'
-  | 'Core';
-
-// Exercise definition
-export type WorkoutExercise = {
+export type Exercise = {
   id: string;
   name: string;
-  primaryMuscle: MuscleGroup;
-  secondaryMuscle: MuscleGroup[];
+  primary_muscles: string[] | null;
+  secondary_muscles: string[] | null;
 };
 
-// Exercise + its sets
-export type ExerciseWithSets = {
-  exercise: WorkoutExercise;
-  sets: WorkoutSet[];
-};
-
-// Full workout session
-export type WorkoutSession = {
+export type WorkoutExercise = {
   id: string;
-  date: string;
-  exercises: ExerciseWithSets[];
+  workout_id: string;
+  exercise_id: string;
+  created_at?: string;
+};
+
+export type WorkoutSet = {
+  id: string;
+  workout_exercise_id: string;
+  reps: number;
+  weight: number;
+  set_type: 'warmup' | 'working' | 'dropset';
+  time_under_tension: number | null;
+  created_at?: string;
 };
