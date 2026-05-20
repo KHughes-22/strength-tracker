@@ -36,3 +36,33 @@ export async function fetchExercises() {
     .select('*')
     .order('name');
 }
+
+export async function addWorkoutExercise(
+  workoutId: string,
+  exerciseId: string
+) {
+  const{data, error} = await supabase
+  .from('workout_exercise')
+  .insert({
+    workout_id: workoutId,
+    exercise_id: exerciseId
+  })
+  .select()
+  .single()
+
+  return {data, error};
+}
+
+export async function addSet(
+  workoutExerciseId: string
+){
+  const{data, error} = await supabase
+  .from('sets')
+  .insert({
+    workout_exercise_id: workoutExerciseId
+})
+  .select()
+  .single()
+
+  return {data, error}
+}

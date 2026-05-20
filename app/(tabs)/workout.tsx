@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { useWorkout } from '../../contexts/WorkoutContext';
-import { addExercise, fetchExercises, startWorkout } from '../../services/workoutService';
+import { addSet, addWorkoutExercise, fetchExercises, startWorkout } from '../../services/workoutService';
 import { Exercise, WorkoutExercise } from '../../types/workout';
 
 
@@ -31,6 +31,7 @@ export default function WorkoutScreen() {
 
     console.log(workout);
   }
+
 
 
 
@@ -89,30 +90,46 @@ export default function WorkoutScreen() {
         {showExerciseMenu && (
           <View style={styles.exerciseMenu}>
             {exercises.map((exercise) => (
-              <Pressable key={exercise.id} style={styles.exerciseMenuItem}
+              <Pressable
+                key={exercise.id}
+                style={styles.exerciseMenuItem}
                 onPress={async () => {
                   if (!activeWorkoutId) return;
 
-                  await addExercise(
-                    exercise.id
+                  const { data: workoutExerciseData, error:workoutExerciseError } =
+                    await addWorkoutExercise(
+                      activeWorkoutId,
+                      exercise.id
+                    );
+
+                  if (workoutExerciseError || !workoutExerciseData) {
+                    console.log(workoutExerciseError);
+                    return;
+                  }
+                  console.log(workoutExerciseData);
+
+
+                  const{data: setData, error: setError} =
+                  await addSet(
+                    workoutExerciseData.id
                   );
+
+                  if (setError || !setData){
+                    console.log(setError);
+                    return;
+                  }
+                  console.log(setData);
+
+
                   setShowExerciseMenu(false);
                 }}
               >
-              <Text>{exercise.name}</Text>
+                <Text>{exercise.name}</Text>
               </Pressable>
             ))}
           </View>
         )}
 
-        {selectedExercise && (
-          <View>
-            <Text>selected exercise selected</Text>
-          </View>
-
-
-        )}
-        
 
       </View>
       )}
