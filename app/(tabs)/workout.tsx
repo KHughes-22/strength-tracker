@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { useWorkout } from '../../contexts/WorkoutContext';
 import { addSet, addWorkoutExercise, fetchExercises, startWorkout } from '../../services/workoutService';
-import { Exercise, WorkoutExercise } from '../../types/workout';
+import { Exercise } from '../../types/workout';
 
 
 export default function WorkoutScreen() {
@@ -15,7 +15,7 @@ export default function WorkoutScreen() {
   const {activeWorkoutId, setActiveWorkoutId} = useWorkout();
   const [showExerciseMenu, setShowExerciseMenu] = useState(false);
   const [exercises, setExercises] = useState<Exercise[]>([]);
-  const [selectedExercise, setSelectedExercise] = useState<WorkoutExercise[]>([]);
+  const [selectedExercises, setSelectedExercises] = useState<any[]>([]);
 
   async function handleStartWorkout(){
     if(!session) return;
@@ -120,6 +120,15 @@ export default function WorkoutScreen() {
                   }
                   console.log(setData);
 
+                  setSelectedExercises([
+                    ...selectedExercises,
+                    {
+                      ...workoutExerciseData,
+                      exercise,
+                      sets: [setData],
+                    },
+                  ]);
+
 
                   setShowExerciseMenu(false);
                 }}
@@ -129,6 +138,49 @@ export default function WorkoutScreen() {
             ))}
           </View>
         )}
+
+        {selectedExercises.map((selectedExercise) => (
+          <View
+            key={selectedExercise.id}
+            style={styles.card}
+          >
+            <Text style={styles.cardTitle}>
+              {selectedExercise.exercise.name}
+            </Text>
+
+            {selectedExercise.sets.map((set: any) => (
+              <View
+                key={set.id}
+                style={styles.setRow}
+              >
+                <View style={styles.setInputContainer}>
+                  <Text style={styles.inputLabel}>
+                    Weight
+                  </Text>
+
+                  <Text>
+                    {set.weight || 0}
+                  </Text>
+                </View>
+
+                <View style={styles.setInputContainer}>
+                  <Text style={styles.inputLabel}>
+                    Reps
+                  </Text>
+
+                  <Text>
+                    {set.reps || 0}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        ))}
+
+
+
+
+        
 
 
       </View>
@@ -232,5 +284,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginBottom: 6,
   },
+
+  setRows: {
+  flexDirection: 'row',
+  gap: 12,
+  marginTop: 12,
+},
 
 });
